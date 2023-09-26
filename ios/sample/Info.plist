@@ -11,6 +11,10 @@
 	</dict>
 	<key>UIAppFonts</key>
 	<array>
+		<string>fonts/NotoSans-Regular.ttf</string>
+		<string>fonts/NotoSans-Medium.ttf</string>
+		<string>fonts/NotoSans-Italic.ttf</string>
+		<string>fonts/NotoSans-Bold.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
@@ -45,6 +49,17 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>org.reactjs.native.example.sample</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>io.identityserver.demo</string>
+            </array>
+        </dict>
+    </array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>

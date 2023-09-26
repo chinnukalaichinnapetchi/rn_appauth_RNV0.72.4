@@ -1,89 +1,98 @@
 
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
-  TouchableOpacity,
   Text,
   View,
-  Alert
-
+  
 } from 'react-native';
 
-// import { authorize, prefetchConfiguration, refresh, revoke, register } from 'react-native-app-auth';
-import { SocialIcon } from 'react-native-elements';
+import { Icon, SocialIcon } from 'react-native-elements';
 import * as AppAuth from 'react-native-app-auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {GOOGLE_ISSUER,GOOGLE_CLIENTID,GOOGLE_REDRIECTURL,GOOGLE_SCOPE,GOOGLE_AUTHENDPOINT,GOOGLE_TOKENENDPOINT,GITHUB_ISSUER,GITHUB_CLIENTID,GITHUB_CLIENTSECRET,GITHUB_REDIRECTURL,GITHUB_ACCESSTYPE,GITHUB_HEADERS_ACCEPT,GITHUB_AUTHENDPOINT,GITHUB_TOKENENDPOINT,GITHUB_REVOCATIONENDPOINT,FB_ISSUER,FB_CLIENTID,FB_REDIRECTURL,FB_AUTHENDPOINT,FB_TOKENENDPOINT,TWITTER_ISSUER,TWITTER_CLIENTID,TWITTER_CLIENTSECRET,TWITTER_REDIRECTURL,
-    TWITTER_AUTHENDPOINT,TWITTER_AUTHURL,TWITTER_STATE,TWITTER_CODE,TWITTER_CODE_METHOD,GITHUB_SCOPES,FB_SCOPES,TWITTER_SCOPES,TWITTER_TOKENENDPOINT} from "@env"
 
-const githubconfig = {
-  clientId: GITHUB_CLIENTID,
-  clientSecret: GITHUB_CLIENTSECRET,
-  redirectUrl: GITHUB_REDIRECTURL,
-  issuer: GITHUB_ISSUER,
-  scopes: GITHUB_SCOPES,
+/// themes
+import { useTheme } from '@react-navigation/native';
+import { AppContext } from '../App';
+import { Switch } from 'react-native-elements';
 
-  additionalParameters: {
-    access_type:GITHUB_ACCESSTYPE,
-  },
-  additionalHeaders: { 'Accept': GITHUB_HEADERS_ACCEPT },
-  serviceConfiguration: {
-    authorizationEndpoint: GITHUB_AUTHENDPOINT,
-    tokenEndpoint: GITHUB_TOKENENDPOINT,
-    revocationEndpoint: GITHUB_REVOCATIONENDPOINT,
-  },
 
-}
+
 const googleconfig = {
-  issuer:GOOGLE_ISSUER,
+  issuer:process.env['GOOGLE_ISSUER'],
   skipTokenExchange: "true",
-  clientId: GOOGLE_CLIENTID,
-  redirectUrl: GOOGLE_REDRIECTURL,
-  scopes:GOOGLE_SCOPE, // Include scopes for user data you want to access
+  clientId: process.env.GOOGLE_CLIENTID,
+  redirectUrl: process.env.GOOGLE_REDRIECTURL,
+  scopes: ['openid', 'https://www.googleapis.com/auth/userinfo.profile', "https://www.googleapis.com/auth/userinfo.email",], // Include scopes for user data you want to access
   serviceConfiguration: {
-    authorizationEndpoint: GOOGLE_AUTHENDPOINT,
-    tokenEndpoint: GOOGLE_TOKENENDPOINT,
+    authorizationEndpoint: process.env.GOOGLE_AUTHENDPOINT,
+    tokenEndpoint: process.env.GOOGLE_TOKENENDPOINT,
   },
   additionalParameters: { prompt: 'login' }
 }
+const githubconfig = {
+  clientId: process.env.GITHUB_CLIENTID,
+  clientSecret: process.env.GITHUB_CLIENTSECRET,
+  redirectUrl: process.env.GITHUB_REDIRECTURL,
+  issuer: process.env['GITHUB_ISSUER'],
+  scopes: ['identity', 'user', 'repo', 'offline_access'],
 
-const facebookconfig = {
-  issuer: FB_ISSUER,
-  clientId: FB_CLIENTID,
-  redirectUrl: FB_REDIRECTURL,
-  scopes: FB_SCOPES,
+  additionalParameters: {
+    access_type:process.env.GITHUB_ACCESSTYPE,
+  },
+  additionalHeaders: { 'Accept': process.env.GITHUB_HEADERS_ACCEPT },
   serviceConfiguration: {
-    authorizationEndpoint: FB_AUTHENDPOINT,
-    tokenEndpoint: FB_TOKENENDPOINT,
+    authorizationEndpoint:process.env.GITHUB_AUTHENDPOINT,
+    tokenEndpoint: process.env.GITHUB_TOKENENDPOINT,
+    revocationEndpoint: process.env.GITHUB_REVOCATIONENDPOINT,
+  },
+
+}
+const facebookconfig = {
+  issuer: process.env['FB_ISSUER'],
+  clientId: process.env.FB_CLIENTID,
+  redirectUrl: process.env.FB_REDIRECTURL,
+  scopes:['public_profile'],
+  serviceConfiguration: {
+    authorizationEndpoint: process.env.FB_AUTHENDPOINT,
+    tokenEndpoint: process.env.FB_TOKENENDPOINT,
   },
 
 }
 const twitterconfig = {
-  issuer: TWITTER_ISSUER,
-  clientId: TWITTER_CLIENTID,
-  clientSecret: TWITTER_CLIENTSECRET,
-  redirectUrl:TWITTER_REDIRECTURL,
+  issuer: process.env['TWITTER_ISSUER'],
+  clientId: process.env.TWITTER_CLIENTID,
+  clientSecret: process.env.TWITTER_CLIENTSECRET,
+  redirectUrl:process.env.TWITTER_REDIRECTURL,
   serviceConfiguration: {
-    authorizationEndpoint: TWITTER_AUTHENDPOINT,
-    tokenEndpoint: TWITTER_TOKENENDPOINT,
+    authorizationEndpoint: process.env.TWITTER_AUTHENDPOINT,
+    tokenEndpoint: process.env.TWITTER_TOKENENDPOINT,
   },
-  authorizationURL: TWITTER_AUTHURL,
-  scope: TWITTER_SCOPES,
-  state: TWITTER_STATE,
-  code_challenge: TWITTER_CODE,
-  code_challenge_method:TWITTER_CODE_METHOD
+  authorizationURL: process.env.TWITTER_AUTHURL,
+  scope: ['offline.access'],
+  state: process.env.TWITTER_STATE,
+  code_challenge: process.env.TWITTER_CODE,
+  code_challenge_method:process.env.TWITTER_CODE_METHOD
 }
 
 
 const Firstscreen = (props) => {
+  const [checked, setChecked] = useState(false);
+  
+  const { colors } = useTheme();
+  const {theme,setTheme} = useContext(AppContext);
 
+
+
+
+// console.log(googleconfig1,"googleconfig11111");
 
   const googleSignIn = async () => {
-
     try {
       const result = await AppAuth.authorize(googleconfig);
       //console.log('Access Token:', result);
@@ -119,6 +128,7 @@ const Firstscreen = (props) => {
     })
 
   };
+  
   const twitterlogin = async () => {
  AppAuth.authorize(twitterconfig).then((res) => {
       console.log(res, "resssss")
@@ -132,14 +142,32 @@ const Firstscreen = (props) => {
 
 
 
-
-
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar />
-      <ScrollView>
+      <ScrollView >
+        <>
+        <View style={{flexDirection:'row',justifyContent:'space-around',marginTop:20}}>
+        <Text style={{color:colors.text,fontSize:20,}}>
+          Change Theme
+        </Text>
+        <Switch
+      value={checked}
+      thumbColor={'white'}
+      onValueChange={(value) => {setChecked(value),setTheme(theme === 'Light' ? 'Dark' : 'Light'),AsyncStorage.setItem("storetheme",theme === 'Light' ? 'Dark' : 'Light')}}
+      ios_backgroundColor={'grey'}
+      color='green'
+      style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
+    
+    />
+        </View>
+
       <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: '50%' }}>
+        <Text style={{fontSize:20,color:colors.text,fontFamily:'NotoSans-Italic'}}>Social login</Text>
+        <Text style={{fontSize:20,color:colors.text,fontFamily:'NotoSans-Bold'}}>Social login</Text>
+        <Text style={{fontSize:20,color:colors.text,fontFamily:'NotoSans-Regular'}}>Social login</Text>
+        <Text style={{fontSize:20,color:colors.text,fontFamily:'NotoSans-Medium'}}>Social login</Text>
+
           <SocialIcon
             type='google'
             onPress={() => googleSignIn()}
@@ -161,7 +189,7 @@ const Firstscreen = (props) => {
           />
 
         </View> 
-
+        </>
       </ScrollView>
     </SafeAreaView>
   );
