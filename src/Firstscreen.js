@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@react-navigation/native';
 import { AppContext } from '../App';
 import { Switch } from 'react-native-elements';
+import Fonts from './Utills/Fonts';
 
 
 
@@ -128,7 +129,7 @@ const Firstscreen = (props) => {
     })
 
   };
-  
+
   const twitterlogin = async () => {
  AppAuth.authorize(twitterconfig).then((res) => {
       console.log(res, "resssss")
@@ -163,10 +164,10 @@ const Firstscreen = (props) => {
         </View>
 
       <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: '50%' }}>
-        <Text style={{fontSize:20,color:colors.text,fontFamily:'NotoSans-Italic'}}>Social login</Text>
-        <Text style={{fontSize:20,color:colors.text,fontFamily:'NotoSans-Bold'}}>Social login</Text>
-        <Text style={{fontSize:20,color:colors.text,fontFamily:'NotoSans-Regular'}}>Social login</Text>
-        <Text style={{fontSize:20,color:colors.text,fontFamily:'NotoSans-Medium'}}>Social login</Text>
+        <Text style={{fontSize:20,color:colors.text,fontFamily:Fonts.Noto_bold}}>Social login</Text>
+        <Text style={{fontSize:20,color:colors.text,fontFamily:Fonts.Noto_italic}}>Social login</Text>
+        <Text style={{fontSize:20,color:colors.text,fontFamily:Fonts.Noto_medium}}>Social login</Text>
+        <Text style={{fontSize:20,color:colors.text,fontFamily:Fonts.Noto_regular}}>Social login</Text>
 
           <SocialIcon
             type='google'
